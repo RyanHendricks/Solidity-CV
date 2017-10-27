@@ -1,4 +1,8 @@
-# EtherCV
+# Solidity-CV
+
+**Curriculum Vitae Smart Contract**
+
+## Getting Started
 
 Deploy the smart contract to the Ethereum network or a testnet such as Kovan or Ropsten.
 
