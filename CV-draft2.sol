@@ -47,9 +47,9 @@ library Structures {
     }
 
     struct Publication {
-        string name;            /// Title of Publication
+        string title;           /// Title of Publication
         string link;            /// URL of publication
-        string language;        /// Language or topic
+        string description;     /// Summary or Abstract
     }
 
     struct Skill {
@@ -59,17 +59,21 @@ library Structures {
 }
 
 
-contract EthereumCV {
+contract SolidityCV {
     mapping (string => string) basics;
-    address owner;
+    
+    /// @notice address of contract owner
+    address public owner;
 
+    /// @dev Mapping structures 
+    Structures.Position[] public positions;
     Structures.Project[] public projects;
     Structures.Education[] public education;
     Structures.Skill[] public skills;
     Structures.Publication[] public publications;
 
     /// @dev set the creator of contract as owner
-    function EthereumCV() {
+    function solidityCV() {
         owner = msg.sender;
     }
 
@@ -82,6 +86,10 @@ contract EthereumCV {
     /// Functions for modifying CV data
 
     /**
+    * @dev basic data is set and edited using a text-based key
+    * @dev the key for each item in BasicData is the name of the item
+    * @dev i.e. to set/edit name the key is "name".
+    * @notice yes, it is that simple
     * @dev sets basic data attributes of CV contract
     * @param key string is the data point to add
     * @param value is the data to set as the basic data point
