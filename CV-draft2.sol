@@ -65,7 +65,7 @@ contract SolidityCV {
     /// @notice address of contract owner
     address public owner;
 
-    /// @dev Mapping structures 
+    /// @dev Mapping data into data structures 
     Structures.Position[] public positions;
     Structures.Project[] public projects;
     Structures.Education[] public education;
@@ -89,7 +89,6 @@ contract SolidityCV {
     * @dev basic data is set and edited using a text-based key
     * @dev the key for each item in BasicData is the name of the item
     * @dev i.e. to set/edit name the key is "name".
-    * @notice yes, it is that simple
     * @dev sets basic data attributes of CV contract
     * @param _key string is the data point to add
     * @param _value string is the data to set as the basic data point
@@ -108,7 +107,13 @@ contract SolidityCV {
     }
 
 
-
+    /**
+     * @dev edit projects
+     * @param operation bool used to indicate if data is being added or deleted
+     * @param name is the name of the project
+     * @param link is the URL of the project
+     * @param description is a free response decription of the project
+     */
     function editProject (
         bool operation,
         string name,
@@ -117,7 +122,7 @@ contract SolidityCV {
     ) public onlyOwner()
     {
         if (operation) {
-            projects.push(Structures.Project(name, description, link));
+            projects.push(Structures.Project(name, link, description));
         } else {
             delete projects[projects.length - 1];
         }
