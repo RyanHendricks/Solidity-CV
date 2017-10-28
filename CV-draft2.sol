@@ -91,16 +91,23 @@ contract SolidityCV {
     * @dev i.e. to set/edit name the key is "name".
     * @notice yes, it is that simple
     * @dev sets basic data attributes of CV contract
-    * @param key string is the data point to add
-    * @param value is the data to set as the basic data point
+    * @param _key string is the data point to add
+    * @param _value string is the data to set as the basic data point
     */
-    function setBasicData (string key, string value) public onlyOwner() {
-        basics[key] = value;
-    }
-
     function editBasicData (string key, string value) public onlyOwner() {
         basics[key] = value;
     }
+
+    /**
+    * @dev query basic data from CV contract
+    * @param arg is a string that is the basic data point specifier
+    * @return the data stored under basic info and the data point specifier
+    */
+    function getBasicData (string arg) public constant returns (string) {
+        return basics[arg];
+    }
+
+
 
     function editProject (
         bool operation,
@@ -118,14 +125,21 @@ contract SolidityCV {
 
     function editEducation (
         bool operation,
-        string name,
-        string speciality,
-        int32 yearStart,
-        int32 yearFinish
-    ) onlyOwner()
+        string _institution,
+        string _focusArea,
+        int32 _yearStart,
+        int32 _yearFinish
+    ) public onlyOwner()
     {
         if (operation) {
-            education.push(Structures.Education(name, speciality, yearStart, yearFinish));
+            education.push(
+                Structures.Education(
+                    _institution,
+                    _focusArea,
+                    _yearStart,
+                    _yearFinish
+                    )
+            );
         } else {
             delete education[education.length - 1];
         }
@@ -147,12 +161,6 @@ contract SolidityCV {
         }
     }
 
-    /// @dev query basic data from CV contract
-    /// @param arg is a string that is the basic data point specifier
-    /// @return the data stored under basic info and the data point specifier
-    function getBasicData (string arg) public constant returns (string) {
-        return basics[arg];
-    }
 
     function getSize(string arg) public constant returns (uint) {
         if (keccak256(arg) == keccak256("projects")) {return projects.length;}
