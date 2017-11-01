@@ -15,41 +15,38 @@ pragma solidity ^0.4.16;
 library Structures {
 
     struct BasicInfo {
-        string _name;           /// Name; First & Last
-        string _label;          /// Job Title 
-        string _email;          /// Email Address
-        string _phone;          /// Phone Number
-        string _website;        /// Website URL
-        string _summary;        /// Executive Summary
-        string _location;       /// Description
+        string name;           /// Name; First & Last
+        string label;          /// Job Title 
+        string email;          /// Email Address
+        string phone;          /// Phone Number
+        string website;        /// Website URL
+        string summary;        /// Executive Summary
+        string location;       /// Description
     }
 
-
-
-
     struct Profile {
-        string _network;        /// Name of network
-        string _username;       /// Account username
-        string _url;            /// URL of profile
+        string network;        /// Name of network
+        string username;       /// Account username
+        string url;            /// URL of profile
     }
 
     /// @dev Used for both Work and Volunteer
     struct Position {
-        string _company;        /// Name of Company
-        string _position;       /// Position at Company
-        string _website;        /// Website of Company
-        string _startDate;      /// Start Date
-        string _endDate;        /// End Date (blank if ongoing)
-        string _summary;        /// Summary of position
-        string _highlights;     /// Notable Accomplishments
+        string company;        /// Name of Company
+        string position;       /// Position at Company
+        string website;        /// Website of Company
+        string startDate;      /// Start Date
+        string endDate;        /// End Date (blank if ongoing)
+        string summary;        /// Summary of position
+        string highlights;     /// Notable Accomplishments
     }
 
     struct Education {
-        string _institution;    /// Name of School
-        string _degree;         /// Degree
-        string _focusArea;      /// Major and/or Minor
-        int32 _yearStart;       /// Year started degree
-        int32 _yearFinish;      /// Graduation year
+        string institution;    /// Name of School
+        string degree;         /// Degree
+        string focusArea;      /// Major and/or Minor
+        string yearStart;       /// Year started degree
+        string yearFinish;      /// Graduation year
     }
 
     struct Project {
@@ -71,48 +68,41 @@ library Structures {
         int32 level;            /// Skill level 1-10
     }
 
-    struct Languages {
+    struct Language {
         string language;        /// Name of Language
         string fluency;         /// Language proficiency
     }
 }
 
 
-contract Owned {
-
-    address public owner;       /// Address of contract owner
-
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
-
-    function owned() public {
-        owner = msg.sender;
-    }
-
-    function kill() public {
-        if (msg.sender == owner)
-        selfdestruct(owner);
-    }
-}
-
-
-contract SolidityCV is Owned {
-    mapping (string => string) basics;
+contract SolidityCV {
     
     /// @notice address of contract owner
     address public owner;
 
+    function SolidityCV() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+    }
+    
+    function kill() public {
+        if (msg.sender == owner)
+        selfdestruct(owner);
+    }
+
     /// @dev Mapping data into data structures 
-    Structures.BasicInfo[] public basic;
+    Structures.BasicInfo[] public basics;
     Structures.Profile[] public profiles;
     Structures.Position[] public positions;
     Structures.Education[] public education;
     Structures.Project[] public projects;
     Structures.Publication[] public publications;
     Structures.Skill[] public skills;
-    Structures.Languages[] public languages;
+    Structures.Language[] public languages;
 
 
     /// Functions for modifying CV data
@@ -128,7 +118,7 @@ contract SolidityCV is Owned {
         string location
         ) public onlyOwner()
         {
-            if (operation) { basics.push(Structures.Basics(
+            if (operation) { basics.push(Structures.BasicInfo(
                 name,
                 label,
                 email,
@@ -139,7 +129,7 @@ contract SolidityCV is Owned {
                 } else {
                     delete basics[basics.length - 1];
                 }
-        }
+            }
     
     function editProfiles (
         bool operation,
@@ -148,13 +138,36 @@ contract SolidityCV is Owned {
         string url
         ) public onlyOwner()
         {
-        if (operation) {profiles.push(Structures.Profiles(
-            operation,
+        if (operation) {profiles.push(Structures.Profile(
             network,
             username,
             url));
             } else {
             delete profiles[profiles.length - 1];
+            }
+        }
+
+    function editPositions (
+        bool operation,
+        string company,
+        string position,
+        string website,
+        string startDate,
+        string endDate,
+        string summary,
+        string highlights     /// Notable Accomplishments
+        ) public onlyOwner()
+        {
+        if (operation) {positions.push(Structures.Position(
+            company,
+            position,
+            website,
+            startDate,
+            endDate,
+            summary,
+            highlights));
+            } else {
+            delete positions[positions.length - 1];
             }
         }
 
@@ -201,25 +214,25 @@ contract SolidityCV is Owned {
             }
         }
 
-    function editEducation (
+    function editPublication (
         bool operation,
-        string _institution,
-        string _focusArea,
-        int32 _yearStart,
-        int32 _yearFinish
+        string title,
+        string publisher,
+        string date,
+        string link,
+        string description
     ) public onlyOwner()
     {
         if (operation) {
-            education.push(
-                Structures.Education(
-                    _institution,
-                    _focusArea,
-                    _yearStart,
-                    _yearFinish
-                    )
-            );
+            publications.push(
+                Structures.Publication(
+                    title,
+                    publisher,
+                    date,
+                    link,
+                    description));
         } else {
-            delete education[education.length - 1];
+            delete publications[publications.length - 1];
         }
     }
 
@@ -232,13 +245,13 @@ contract SolidityCV is Owned {
         }
 
 
-    function editPublication (bool operation, string name, string link, string language) public onlyOwner() {
+    function editLanguage(bool operation, string language, string fluency) public onlyOwner() {
         if (operation) {
-            publications.push(Structures.Publication(name, link, language));
+            languages.push(Structures.Language(language, fluency));
         } else {
-            delete publications[publications.length - 1];
+            delete languages[languages.length - 1];
+            }
         }
-    }
 
 
     function getSize(string arg) public constant returns (uint) {
