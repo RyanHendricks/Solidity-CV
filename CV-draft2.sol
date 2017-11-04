@@ -30,7 +30,7 @@ library Structures {
         string url;            /// URL of profile
     }
 
-    /// @dev Used for both Work and Volunteer
+    /// @dev Can be used for both Work and Volunteer
     struct Position {
         string company;        /// Name of Company
         string position;       /// Position at Company
